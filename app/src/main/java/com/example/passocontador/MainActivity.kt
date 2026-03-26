@@ -1,15 +1,15 @@
 package com.example.passocontador
 
+import android.Manifest
 import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
+import android.hardware.*
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -20,30 +20,66 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var passos = 0
     private var ultimoValor = 0f
     private val limite = 10f
-    private val meta = 5000
+
+    private var meta = 0
 
     private lateinit var txtPassos: TextView
-    private lateinit var txtMeta: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var btnReset: Button
+    private lateinit var txtStatus: TextView
+    private lateinit var inputMeta: EditText
+    private lateinit var btnSalvarMeta: Button
+
+    private lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         txtPassos = findViewById(R.id.txtPassos)
-        txtMeta = findViewById(R.id.txtMeta)
-        progressBar = findViewById(R.id.progressBar)
-        btnReset = findViewById(R.id.btnReset)
+        txtStatus = findViewById(R.id.txtStatus)
+        inputMeta = findViewById(R.id.inputMeta)
+        btnSalvarMeta = findViewById(R.id.btnSalvarMeta)
 
-        progressBar.max = meta
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        btnReset.setOnClickListener {
-            passos = 0
-            atualizarUI()
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        btnSalvarMeta.setOnClickListener {
+            val valor = inputMeta.text.toString()
+            if (valor.isNotEmpty()) {
+                meta = valor.toInt()
+                Toast.makeText(this, "Meta definida: $meta passos", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        atualizarUI()
+        solicitarPermissaoGPS()
+    }
+
+    private fun solicitarPermissaoGPS() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1
+            )
+        } else {
+            obterLocalizacao()
+        }
+    }
+
+    private fun obterLocalizacao() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
+
+            val location: Location? =
+                locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
+            location?.let {
+                Toast.makeText(this, "Localização ativa!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onResume() {
@@ -70,15 +106,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             if (diferenca > limite) {
                 passos++
-                atualizarUI()
+                txtPassos.text = "Passos: $passos"
+
+                if (meta > 0 && passos >= meta) {
+                    txtStatus.text = "🎉 Parabéns você chegou lá!"
+                }
             }
         }
-    }
-
-    private fun atualizarUI() {
-        txtPassos.text = "Passos: $passos"
-        txtMeta.text = "Meta: $meta"
-        progressBar.progress = passos
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}

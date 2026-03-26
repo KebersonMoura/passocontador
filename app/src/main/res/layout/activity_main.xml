@@ -3,40 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/inputMeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Digite sua meta de passos"
+        android:inputType="number"/>
+
+    <Button
+        android:id="@+id/btnSalvarMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar Meta"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/txtPassos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Passos: 0"
         android:textSize="28sp"
-        android:text="Passos: 0"/>
-
-    <TextView
-        android:id="@+id/txtMeta"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Meta: 5000"
-        android:layout_marginBottom="20dp"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:max="5000"/>
-
-    <Button
-        android:id="@+id/btnReset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Resetar"
         android:layout_marginTop="20dp"/>
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="175dp"
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="meu contador de passos."
-        android:textColor="#FFFFFF" />
+        android:text=""
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+
 </LinearLayout>
