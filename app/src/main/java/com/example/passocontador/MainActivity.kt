@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import kotlin.math.sqrt
 
@@ -18,9 +19,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private var passos = 0
     private var ultimoValor = 0f
-    private var limite = 10f
+    private val limite = 10f
+    private val meta = 5000
 
     private lateinit var txtPassos: TextView
+    private lateinit var txtMeta: TextView
+    private lateinit var progressBar: ProgressBar
     private lateinit var btnReset: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +32,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.activity_main)
 
         txtPassos = findViewById(R.id.txtPassos)
+        txtMeta = findViewById(R.id.txtMeta)
+        progressBar = findViewById(R.id.progressBar)
         btnReset = findViewById(R.id.btnReset)
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        progressBar.max = meta
 
         btnReset.setOnClickListener {
             passos = 0
-            txtPassos.text = "Passos: $passos"
+            atualizarUI()
         }
+
+        atualizarUI()
     }
 
     override fun onResume() {
@@ -63,9 +70,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             if (diferenca > limite) {
                 passos++
-                txtPassos.text = "Passos: $passos"
+                atualizarUI()
             }
         }
+    }
+
+    private fun atualizarUI() {
+        txtPassos.text = "Passos: $passos"
+        txtMeta.text = "Meta: $meta"
+        progressBar.progress = passos
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
