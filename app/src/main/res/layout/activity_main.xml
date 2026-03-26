@@ -2,7 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -20,17 +19,37 @@
         android:text="Salvar Meta"
         android:layout_marginTop="10dp"/>
 
+    <!-- META VISÍVEL -->
     <TextView
-        android:id="@+id/txtPassos"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtMeta"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Passos: 0"
-        android:textSize="28sp"
+        android:text="Meta: -"
+        android:textSize="20sp"
         android:layout_marginTop="20dp"/>
 
+    <!-- CONTAGEM REGRESSIVA -->
+    <TextView
+        android:id="@+id/txtRestante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Faltam: -"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+    <!-- PASSOS -->
+    <TextView
+        android:id="@+id/txtPassos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Passos: 0"
+        android:textSize="26sp"
+        android:layout_marginTop="20dp"/>
+
+    <!-- STATUS -->
     <TextView
         android:id="@+id/txtStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="18sp"
